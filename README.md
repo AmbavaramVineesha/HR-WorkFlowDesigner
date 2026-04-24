@@ -124,3 +124,7 @@ Implement workflow logic and validation
 Integrate mock APIs
 
 It reflects strong understanding of React, component design, and real-world system behavior.
+
+## Workflow Preview
+
+![Workflow](./assets/workflow.png)s
