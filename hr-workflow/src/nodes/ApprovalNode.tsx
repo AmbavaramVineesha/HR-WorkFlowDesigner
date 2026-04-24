@@ -2,7 +2,7 @@ import { Handle, Position } from "reactflow";
 import { useFlowStore } from "../store/useFlowStore";
 
 // 🎨 reusable card
-const card = (bg, border, selected) => ({
+const card = (bg: string, border: string, selected: boolean) => ({
   padding: 10,
   borderRadius: 10,
   background: selected ? "#ecfdf5" : bg,
@@ -11,11 +11,11 @@ const card = (bg, border, selected) => ({
   transition: "all 0.2s ease",
 });
 
-export const ApprovalNode = ({ id, data }) => {
-  const selectedNodes = useFlowStore((s) => s.selectedNodes);
+export const ApprovalNode = ({ id, data }: any) => {
+  const selectedNodes = useFlowStore((s: any) => s.selectedNodes || []);
 
-  // ✅ selection check
-  const isSelected = selectedNodes.some((n) => n.id === id);
+  // ✅ safe selection check
+  const isSelected = selectedNodes.some((n: any) => n.id === id);
 
   return (
     <div style={card("#ecfdf5", "#22c55e", isSelected)}>

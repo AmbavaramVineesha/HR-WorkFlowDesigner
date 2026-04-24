@@ -3,30 +3,32 @@ import { useFlowStore } from "../store/useFlowStore";
 import { simulateWorkflow, getAutomations } from "../api/mockApi";
 
 export default function Sandbox() {
-  const nodes = useFlowStore((s) => s.nodes);
-  const edges = useFlowStore((s) => s.edges);
+  const nodes = useFlowStore((s: any) => s.nodes);
+  const edges = useFlowStore((s: any) => s.edges);
 
-  const selectedNode = useFlowStore((s) =>
-    s.nodes.find((n) => n.id === s.selectedNode?.id),
+  const selectedNode = useFlowStore((s: any) =>
+    s.nodes.find((n: any) => n.id === s.selectedNode?.id),
   );
 
-  const setNodes = useFlowStore((s) => s.setNodes);
-  const setEdges = useFlowStore((s) => s.setEdges);
-  const setSelectedNode = useFlowStore((s) => s.setSelectedNode);
+  const setNodes = useFlowStore((s: any) => s.setNodes);
+  const setEdges = useFlowStore((s: any) => s.setEdges);
+  const setSelectedNode = useFlowStore((s: any) => s.setSelectedNode);
 
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState<any[]>([]);
   const [error, setError] = useState("");
-  const [actions, setActions] = useState([]);
+  const [actions, setActions] = useState<any[]>([]);
 
-  // 🆕 MODAL STATE
   const [showDelete, setShowDelete] = useState(false);
 
   useEffect(() => {
     getAutomations().then(setActions);
   }, []);
 
-  const updateNode = (field, value) => {
-    setNodes((prev) =>
+  // ✅ SAFE UPDATE NODE
+  const updateNode = (field: string, value: any) => {
+    if (!selectedNode) return;
+
+    setNodes((prev: any[]) =>
       prev.map((n) =>
         n.id === selectedNode.id
           ? { ...n, data: { ...n.data, [field]: value } }
@@ -35,11 +37,13 @@ export default function Sandbox() {
     );
   };
 
-  // 🆕 DELETE FUNCTION
+  // ✅ DELETE NODE
   const deleteNode = () => {
-    setNodes((prev) => prev.filter((n) => n.id !== selectedNode.id));
+    if (!selectedNode) return;
 
-    setEdges((prev) =>
+    setNodes((prev: any[]) => prev.filter((n) => n.id !== selectedNode.id));
+
+    setEdges((prev: any[]) =>
       prev.filter(
         (e) => e.source !== selectedNode.id && e.target !== selectedNode.id,
       ),
@@ -49,6 +53,7 @@ export default function Sandbox() {
     setShowDelete(false);
   };
 
+  // ✅ RUN WORKFLOW
   const runWorkflow = async () => {
     setError("");
     setLogs([]);
@@ -58,13 +63,13 @@ export default function Sandbox() {
       return;
     }
 
-    const startNodes = nodes.filter((n) => n.type === "start");
+    const startNodes = nodes.filter((n: any) => n.type === "start");
     if (startNodes.length !== 1) {
       setError("⚠️ Exactly one Start node required");
       return;
     }
 
-    const endNodes = nodes.filter((n) => n.type === "end");
+    const endNodes = nodes.filter((n: any) => n.type === "end");
     if (endNodes.length === 0) {
       setError("⚠️ Add an End node");
       return;
@@ -77,7 +82,7 @@ export default function Sandbox() {
       return;
     }
 
-    setLogs(res.steps);
+    setLogs(res.steps || []);
   };
 
   return (
@@ -102,7 +107,7 @@ export default function Sandbox() {
           <div style={{ fontSize: 13, color: "#888" }}>No execution yet</div>
         )}
 
-        {logs.map((log) => (
+        {logs.map((log: any) => (
           <div key={log.step} style={logCard}>
             <div style={{ fontWeight: "bold" }}>
               {log.step}. {log.label}
@@ -114,7 +119,7 @@ export default function Sandbox() {
 
             {log.type === "automated" && log.meta?.action && (
               <div style={{ fontSize: 12, marginTop: 4 }}>
-                ⚙️ Action: {log.meta.action}
+                Action: {log.meta.action}
               </div>
             )}
           </div>
@@ -209,7 +214,7 @@ export default function Sandbox() {
                 style={inputStyle}
               >
                 <option value="">Select Action</option>
-                {actions.map((a) => (
+                {actions.map((a: any) => (
                   <option key={a.id} value={a.id}>
                     {a.label}
                   </option>
@@ -232,14 +237,14 @@ export default function Sandbox() {
             </>
           )}
 
-          {/* 🆕 DELETE BUTTON */}
+          {/* DELETE */}
           <button onClick={() => setShowDelete(true)} style={deleteBtn}>
-            🗑 Delete Node
+            Delete Node
           </button>
         </div>
       )}
 
-      {/* 🆕 CONFIRM MODAL */}
+      {/* MODAL */}
       {showDelete && (
         <div style={modalOverlay}>
           <div style={modalBox}>
@@ -259,7 +264,7 @@ export default function Sandbox() {
   );
 }
 
-/* 🎨 STYLES */
+/* STYLES */
 
 const panelCard = {
   background: "#fff",
@@ -267,7 +272,6 @@ const panelCard = {
   borderRadius: 12,
   padding: 14,
   marginBottom: 14,
-  boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
 };
 
 const runButton = {
@@ -276,7 +280,6 @@ const runButton = {
   color: "#fff",
   border: "none",
   borderRadius: 6,
-  cursor: "pointer",
 };
 
 const deleteBtn = {
@@ -286,7 +289,6 @@ const deleteBtn = {
   border: "none",
   padding: "6px 10px",
   borderRadius: 6,
-  cursor: "pointer",
 };
 
 const confirmBtn = {
@@ -298,7 +300,7 @@ const confirmBtn = {
 };
 
 const modalOverlay = {
-  position: "fixed",
+  position: "fixed" as const,
   top: 0,
   left: 0,
   width: "100%",
@@ -325,7 +327,6 @@ const logCard = {
   marginBottom: 8,
   border: "1px solid #e5e7eb",
   borderRadius: 8,
-  background: "#fafafa",
 };
 
 const inputStyle = {

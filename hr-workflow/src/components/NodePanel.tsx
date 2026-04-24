@@ -1,13 +1,15 @@
 import { useFlowStore } from "../store/useFlowStore";
 
 export default function NodePanel() {
-  const { selectedNode, nodes, setNodes } = useFlowStore();
+  const selectedNode = useFlowStore((s: any) => s.selectedNode);
+  const nodes = useFlowStore((s: any) => s.nodes);
+  const setNodes = useFlowStore((s: any) => s.setNodes);
 
   if (!selectedNode) return <div>Select a node</div>;
 
-  const updateField = (field, value) => {
-    setNodes(
-      nodes.map((n) =>
+  const updateField = (field: string, value: any) => {
+    setNodes((prev: any[]) =>
+      prev.map((n) =>
         n.id === selectedNode.id
           ? { ...n, data: { ...n.data, [field]: value } }
           : n,
@@ -21,18 +23,29 @@ export default function NodePanel() {
 
       <input
         placeholder="Title"
-        value={selectedNode.data.label || ""}
+        value={selectedNode.data?.label || ""}
         onChange={(e) => updateField("label", e.target.value)}
+        style={inputStyle}
       />
 
-      <br />
       <br />
 
       <input
         placeholder="Description"
-        value={selectedNode.data.description || ""}
+        value={selectedNode.data?.description || ""}
         onChange={(e) => updateField("description", e.target.value)}
+        style={inputStyle}
       />
     </div>
   );
 }
+
+/* 🎨 STYLES */
+
+const inputStyle = {
+  width: "100%",
+  padding: 6,
+  marginBottom: 10,
+  borderRadius: 6,
+  border: "1px solid #ddd",
+};

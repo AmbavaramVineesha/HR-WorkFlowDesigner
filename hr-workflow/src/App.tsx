@@ -55,6 +55,6 @@ const rightPanelStyle = {
   background: "#ffffff",
   borderLeft: "1px solid #e5e7eb",
   padding: 16,
-  overflowY: "auto",
+  overflowY: "auto" as const,
   boxShadow: "-2px 0 6px rgba(0,0,0,0.05)",
 };
