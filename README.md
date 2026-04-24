@@ -127,4 +127,4 @@ It reflects strong understanding of React, component design, and real-world syst
 
 ## Workflow Preview
 
-![Workflow](./assets/workflow.png)s
+![Workflow](./src/assests/workfloe.png)
