@@ -127,4 +127,4 @@ It reflects strong understanding of React, component design, and real-world syst
 
 ## Workflow Preview
 
-![Workflow](./src/assets/workflow.jpg)
+![Workflow](https://raw.githubusercontent.com/AmbavaramVineesha/HR-WorkFlowDesigner/main/hr-workflow/src/assets/workflow.jpg)
